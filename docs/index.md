@@ -6,7 +6,8 @@
  ![License](https://img.shields.io/github/license/pedrolcl/vmpk-android)
  [<img src="https://shields.rbtlog.dev/simple/io.github.pedrolcl.vmpk" alt="RB Status">](https://shields.rbtlog.dev/io.github.pedrolcl.vmpk)
 
-[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="IzzyOnDroid" width="182" height="70">](https://apt.izzysoft.de/packages/io.github.pedrolcl.vmpk)
+[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="IzzyOnDroid" width="182" height="70">](https://apt.izzysoft.de/packages/io.github.pedrolcl.vmpk) 
+[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="70">](https://f-droid.org/packages/io.github.pedrolcl.vmpk/)
 
 This program is a MIDI Controller emulated by software. It produces MIDI
 events, which can be received by other compatible devices like MIDI

@@ -45,7 +45,7 @@
     <string name="language">Language</string>
     <string name="pick_lang">Pick your Language</string>
     <string name="theme">Theme</string>
-    <string name="midi_out">MIDI Output</string>
+    <string name="midi_output_mode">MIDI Output Mode</string>
     <string name="first_key">First Key</string>
     <string name="default_firstKey">0</string>
     <string name="double_keyboard">Double Keyboard in Full Screen</string>

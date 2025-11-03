@@ -143,8 +143,17 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		mDisplay = mWindowManager.getDefaultDisplay();
 
-		boolean sendToSynth = SettingChangeHelper.getCurrentOutput(this);
-		mEngine = sendToSynth ? new SynthEngine(this) : new NetworkMidi(this);
+		switch (SettingChangeHelper.getCurrentOutputMode(this)) {
+			case SettingChangeHelper.MIDI_OUTPUT_MODE_NETWORK:
+				mEngine = new NetworkMidi(this);
+				break;
+			case SettingChangeHelper.MIDI_OUTPUT_MODE_INTERNAL_SYNTH:
+				mEngine = new SynthEngine(this);
+				break;
+		}
+		if (mEngine == null) {
+			throw new RuntimeException("mEngine is null");
+		}
 
 		mPiano1 = (PianoView) findViewById(R.id.pianoView1);
 		if (mPiano1 != null) {

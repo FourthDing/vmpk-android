@@ -12,14 +12,17 @@ import android.preference.PreferenceManager;
 import java.util.Locale;
 
 public class SettingChangeHelper {
+	public static final int MIDI_OUTPUT_MODE_NETWORK = 1;
+	public static final int MIDI_OUTPUT_MODE_INTERNAL_SYNTH = 2;
+
 	private static boolean mLastTheme = false;
-	private static boolean mLastOutput = true;
+	private static int mLastOutput = MIDI_OUTPUT_MODE_NETWORK;
 	private static String mLastLang = null;
 	// private static boolean mFullScreen = false;
 
 	public static void changeSettingsCheck(Activity activity) {
 		boolean newTheme = getCurrentTheme(activity);
-		boolean newOutput = getCurrentOutput(activity);
+		int newOutput = getCurrentOutputMode(activity);
 		String newLang = getCurrentLanguage(activity);
 		if (newTheme != mLastTheme || newOutput != mLastOutput || newLang != mLastLang) {
 			Log.d("SettingChangeHelper", "changingSettings");
@@ -31,7 +34,7 @@ public class SettingChangeHelper {
 
 	public static void onMainActivityCreateApplySettings(Activity activity) {
 		mLastTheme = getCurrentTheme(activity);
-		mLastOutput = getCurrentOutput(activity);
+		mLastOutput = getCurrentOutputMode(activity);
 		mLastLang = getCurrentLanguage(activity);
 		Log.d("SettingChangeHelper", "onActivityCreateApplySettings");
 		if (mLastTheme) {
@@ -63,9 +66,28 @@ public class SettingChangeHelper {
 		return sharedPrefs.getBoolean("alternate_theme", false);
 	}
 
-	public static boolean getCurrentOutput(Activity activity) {
+	public static int getCurrentOutputMode(Activity activity) {
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
-		return sharedPrefs.getBoolean("midi_output", true);
+		int output = -1;
+		try {
+			output = Integer.parseInt(sharedPrefs.getString("midi_output_mode", ""));
+		} catch (NumberFormatException e) {
+		} catch (ClassCastException e) {
+        }
+		if (output < MIDI_OUTPUT_MODE_NETWORK || output > MIDI_OUTPUT_MODE_INTERNAL_SYNTH) {
+			if (sharedPrefs.contains("midi_output")) {
+				output = sharedPrefs.getBoolean("midi_output", true)
+						? MIDI_OUTPUT_MODE_INTERNAL_SYNTH
+						: MIDI_OUTPUT_MODE_NETWORK;
+			} else {
+				output = MIDI_OUTPUT_MODE_NETWORK;
+			}
+			sharedPrefs.edit()
+					.putString("midi_output_mode", Integer.toString(output))
+					.remove("midi_output")
+					.commit();
+		}
+		return output;
 	}
 
 	private static String getCurrentLanguage(Activity activity) {

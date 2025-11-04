@@ -59,4 +59,8 @@ public interface MidiEngine {
 	public void panic();
 
 	public void reset();
+
+	public interface ConnectionListener {
+		public void onMidiConnected();
+	}
 }

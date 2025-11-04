@@ -32,6 +32,8 @@ public class SystemMidiEngine implements MidiEngine, MidiManager.OnDeviceOpenedL
 
     private Activity mActivity;
 
+    private ConnectionListener mConnectionListener;
+
     private MidiManager mMidiManager;
 
     private final MidiDeviceCallback mMidiDeviceCallback = new MidiDeviceCallback();
@@ -89,12 +91,13 @@ public class SystemMidiEngine implements MidiEngine, MidiManager.OnDeviceOpenedL
     private boolean mMidiDevicePending = false;
     private Queue<byte[]> mMidiDataQueue = new ArrayDeque<>();
 
-    private SystemMidiEngine(Activity activity, MidiManager midiManager) {
+    private SystemMidiEngine(Activity activity, ConnectionListener connectionListener, MidiManager midiManager) {
         mActivity = activity;
+        mConnectionListener = connectionListener;
         mMidiManager = midiManager;
     }
 
-    public static SystemMidiEngine create(Activity activity) {
+    public static SystemMidiEngine create(Activity activity, ConnectionListener connectionListener) {
         if (!activity.getPackageManager().hasSystemFeature(FEATURE_MIDI)) {
             Log.e(TAG, "System does not support MIDI feature.");
             return null;
@@ -106,7 +109,7 @@ public class SystemMidiEngine implements MidiEngine, MidiManager.OnDeviceOpenedL
             return null;
         }
 
-        return new SystemMidiEngine(activity, midiManager);
+        return new SystemMidiEngine(activity, connectionListener, midiManager);
     }
 
     @Override
@@ -211,7 +214,9 @@ public class SystemMidiEngine implements MidiEngine, MidiManager.OnDeviceOpenedL
             mUseMidiPortInfo = port;
             openMidiPort();
             item.setChecked(true);
-            // TODO: reapply control states
+            if (mConnectionListener != null) {
+                mConnectionListener.onMidiConnected();
+            }
             return true;
         }
         return false;

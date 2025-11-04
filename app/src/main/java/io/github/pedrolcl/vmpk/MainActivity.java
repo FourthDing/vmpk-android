@@ -145,7 +145,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 		switch (SettingChangeHelper.getCurrentOutputMode(this)) {
 			case SettingChangeHelper.MIDI_OUTPUT_MODE_SYSTEM:
-				mEngine = SystemMidiEngine.create(this);
+				mEngine = SystemMidiEngine.create(this, new MidiConnectionListener());
 				if (mEngine == null) {
 					// Fallback just in case
 					mEngine = new NetworkMidi(this);
@@ -830,6 +830,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 				return true;
 			}
 			return false;
+		}
+	}
+
+	private class MidiConnectionListener implements MidiEngine.ConnectionListener {
+		@Override
+		public void onMidiConnected() {
+			for (int i = 0; i < mCtlState.length; ++i) {
+				mEngine.controller(mChannel, mCtlNum[i], mCtlState[i]);
+			}
+			mEngine.programChange(mChannel, mPgm);
 		}
 	}
 

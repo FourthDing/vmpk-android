@@ -4,6 +4,8 @@
 package io.github.pedrolcl.vmpk;
 
 import android.app.Activity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public interface MidiEngine {
 	static final int STATUS_NOTEOFF = 0x80;
@@ -28,6 +30,13 @@ public interface MidiEngine {
 	static final int CTL_ALL_SOUNDS_OFF = 0x78;
 	static final int CTL_RESET_ALL_CTL = 0x79;
 	static final int CTL_ALL_NOTES_OFF = 0x7B;
+
+	public default void configureOptionsMenu(Menu menu) {
+	}
+
+	public default boolean onOptionsItemSelected(MenuItem item) {
+		return false;
+	}
 
 	public void start(Activity activity);
 

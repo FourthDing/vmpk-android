@@ -144,6 +144,13 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mDisplay = mWindowManager.getDefaultDisplay();
 
 		switch (SettingChangeHelper.getCurrentOutputMode(this)) {
+			case SettingChangeHelper.MIDI_OUTPUT_MODE_SYSTEM:
+				mEngine = SystemMidiEngine.create(this);
+				if (mEngine == null) {
+					// Fallback just in case
+					mEngine = new NetworkMidi(this);
+				}
+				break;
 			case SettingChangeHelper.MIDI_OUTPUT_MODE_NETWORK:
 				mEngine = new NetworkMidi(this);
 				break;
@@ -578,6 +585,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		mMenu = menu;
+		mEngine.configureOptionsMenu(menu);
 		return true;
 	}
 
@@ -597,6 +605,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 			return true;
 		} else if (item.getItemId() == R.id.action_fullscreen) {
 			toggleFullScreen(item);
+			return true;
+		} else if (mEngine.onOptionsItemSelected(item)) {
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);

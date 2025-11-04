@@ -3,6 +3,9 @@
 
 package io.github.pedrolcl.vmpk;
 
+import static android.content.Context.MIDI_SERVICE;
+import static android.content.pm.PackageManager.FEATURE_MIDI;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,11 +15,12 @@ import android.preference.PreferenceManager;
 import java.util.Locale;
 
 public class SettingChangeHelper {
+	public static final int MIDI_OUTPUT_MODE_SYSTEM = 0;
 	public static final int MIDI_OUTPUT_MODE_NETWORK = 1;
 	public static final int MIDI_OUTPUT_MODE_INTERNAL_SYNTH = 2;
 
 	private static boolean mLastTheme = false;
-	private static int mLastOutput = MIDI_OUTPUT_MODE_NETWORK;
+	private static int mLastOutput = MIDI_OUTPUT_MODE_SYSTEM;
 	private static String mLastLang = null;
 	// private static boolean mFullScreen = false;
 
@@ -74,18 +78,24 @@ public class SettingChangeHelper {
 		} catch (NumberFormatException e) {
 		} catch (ClassCastException e) {
         }
-		if (output < MIDI_OUTPUT_MODE_NETWORK || output > MIDI_OUTPUT_MODE_INTERNAL_SYNTH) {
+		if (output < MIDI_OUTPUT_MODE_SYSTEM || output > MIDI_OUTPUT_MODE_INTERNAL_SYNTH) {
 			if (sharedPrefs.contains("midi_output")) {
 				output = sharedPrefs.getBoolean("midi_output", true)
 						? MIDI_OUTPUT_MODE_INTERNAL_SYNTH
 						: MIDI_OUTPUT_MODE_NETWORK;
 			} else {
-				output = MIDI_OUTPUT_MODE_NETWORK;
+				output = MIDI_OUTPUT_MODE_SYSTEM;
 			}
 			sharedPrefs.edit()
 					.putString("midi_output_mode", Integer.toString(output))
 					.remove("midi_output")
 					.commit();
+		}
+		if (output == MIDI_OUTPUT_MODE_SYSTEM) {
+			if (!activity.getPackageManager().hasSystemFeature(FEATURE_MIDI)
+					|| activity.getSystemService(MIDI_SERVICE) == null) {
+				output = MIDI_OUTPUT_MODE_NETWORK;
+			}
 		}
 		return output;
 	}

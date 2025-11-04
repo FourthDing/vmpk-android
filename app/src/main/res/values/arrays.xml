@@ -353,11 +353,13 @@
 	</string-array>
 
 	<string-array name="midi_output_mode_names">
+		<item>Android MIDI</item>
 		<item>Network - UDP Multicast (ipMIDI)</item>
 		<item>Internal MIDI Synthesizer</item>
 	</string-array>
 
 	<string-array name="midi_output_mode_values">
+		<item>0</item>
 		<item>1</item>
 		<item>2</item>
 	</string-array>

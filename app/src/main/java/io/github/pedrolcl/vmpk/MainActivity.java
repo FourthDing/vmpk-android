@@ -143,8 +143,24 @@ public class MainActivity extends Activity implements SensorEventListener {
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		mDisplay = mWindowManager.getDefaultDisplay();
 
-		boolean sendToSynth = SettingChangeHelper.getCurrentOutput(this);
-		mEngine = sendToSynth ? new SynthEngine(this) : new NetworkMidi(this);
+		switch (SettingChangeHelper.getCurrentOutputMode(this)) {
+			case SettingChangeHelper.MIDI_OUTPUT_MODE_SYSTEM:
+				mEngine = SystemMidiEngine.create(this, new MidiConnectionListener());
+				if (mEngine == null) {
+					// Fallback just in case
+					mEngine = new SynthEngine(this);
+				}
+				break;
+			case SettingChangeHelper.MIDI_OUTPUT_MODE_NETWORK:
+				mEngine = new NetworkMidi(this);
+				break;
+			case SettingChangeHelper.MIDI_OUTPUT_MODE_INTERNAL_SYNTH:
+				mEngine = new SynthEngine(this);
+				break;
+		}
+		if (mEngine == null) {
+			throw new RuntimeException("mEngine is null");
+		}
 
 		mPiano1 = (PianoView) findViewById(R.id.pianoView1);
 		if (mPiano1 != null) {
@@ -569,6 +585,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		mMenu = menu;
+		mEngine.configureOptionsMenu(menu);
 		return true;
 	}
 
@@ -588,6 +605,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 			return true;
 		} else if (item.getItemId() == R.id.action_fullscreen) {
 			toggleFullScreen(item);
+			return true;
+		} else if (mEngine.onOptionsItemSelected(item)) {
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);
@@ -811,6 +830,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 				return true;
 			}
 			return false;
+		}
+	}
+
+	private class MidiConnectionListener implements MidiEngine.ConnectionListener {
+		@Override
+		public void onMidiConnected() {
+			for (int i = 0; i < mCtlState.length; ++i) {
+				mEngine.controller(mChannel, mCtlNum[i], mCtlState[i]);
+			}
+			mEngine.programChange(mChannel, mPgm);
 		}
 	}
 

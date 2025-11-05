@@ -29,16 +29,14 @@
         android:summary="@string/pick_color"
         android:defaultValue="@android:color/holo_blue_dark"
         />
-	  
-       <SwitchPreference
-         android:key="midi_output"
-         android:title="@string/midi_out"
-         android:summaryOff="@string/summary_network"
-         android:summaryOn="@string/summary_synth"
-         android:switchTextOff="@string/network"
-         android:switchTextOn="@string/synth"
-         android:defaultValue="true"
-         />
+
+      <ListPreference
+        android:title="@string/midi_output_mode"
+        android:key="midi_output_mode"
+        android:entries="@array/midi_output_mode_names"
+        android:entryValues="@array/midi_output_mode_values"
+        android:defaultValue="2"
+        />
        
        <SwitchPreference android:key="double_keyboard"
          android:title="@string/double_keyboard"

@@ -3,6 +3,9 @@
 
 package io.github.pedrolcl.vmpk;
 
+import static android.content.Context.MIDI_SERVICE;
+import static android.content.pm.PackageManager.FEATURE_MIDI;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,6 +19,9 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SettingsFragment extends PreferenceFragment
 		implements OnSharedPreferenceChangeListener {
@@ -53,6 +59,37 @@ public class SettingsFragment extends PreferenceFragment
 					return true;
 				}
 			});
+		}
+
+		maybeRemoveSystemMidiOption();
+	}
+
+	private void maybeRemoveSystemMidiOption() {
+		if (getActivity().getPackageManager().hasSystemFeature(FEATURE_MIDI)
+				&& getActivity().getSystemService(MIDI_SERVICE) != null) {
+			return;
+		}
+
+		ListPreference midiOutputModePref = (ListPreference) findPreference("midi_output_mode");
+		if (midiOutputModePref != null) {
+			ArrayList<CharSequence> entries = new ArrayList<>(Arrays.asList(midiOutputModePref.getEntries()));
+			ArrayList<CharSequence> values = new ArrayList<>(Arrays.asList(midiOutputModePref.getEntryValues()));
+
+			int systemMidiIndex = -1;
+			final String systemMidiValue = Integer.toString(SettingChangeHelper.MIDI_OUTPUT_MODE_SYSTEM);
+			for (int i = 0; i < values.size(); i++) {
+				if (values.get(i).equals(systemMidiValue)) {
+					systemMidiIndex = i;
+					break;
+				}
+			}
+
+			if (systemMidiIndex >= 0) {
+				entries.remove(systemMidiIndex);
+				values.remove(systemMidiIndex);
+				midiOutputModePref.setEntries(entries.toArray(new CharSequence[]{}));
+				midiOutputModePref.setEntryValues(values.toArray(new CharSequence[]{}));
+			}
 		}
 	}
 

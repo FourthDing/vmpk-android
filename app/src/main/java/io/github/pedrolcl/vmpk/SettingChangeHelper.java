@@ -84,7 +84,7 @@ public class SettingChangeHelper {
 						? MIDI_OUTPUT_MODE_INTERNAL_SYNTH
 						: MIDI_OUTPUT_MODE_NETWORK;
 			} else {
-				output = MIDI_OUTPUT_MODE_SYSTEM;
+				output = MIDI_OUTPUT_MODE_INTERNAL_SYNTH;
 			}
 			sharedPrefs.edit()
 					.putString("midi_output_mode", Integer.toString(output))
@@ -94,7 +94,7 @@ public class SettingChangeHelper {
 		if (output == MIDI_OUTPUT_MODE_SYSTEM) {
 			if (!activity.getPackageManager().hasSystemFeature(FEATURE_MIDI)
 					|| activity.getSystemService(MIDI_SERVICE) == null) {
-				output = MIDI_OUTPUT_MODE_NETWORK;
+				output = MIDI_OUTPUT_MODE_INTERNAL_SYNTH;
 			}
 		}
 		return output;

@@ -148,7 +148,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 				mEngine = SystemMidiEngine.create(this, new MidiConnectionListener());
 				if (mEngine == null) {
 					// Fallback just in case
-					mEngine = new NetworkMidi(this);
+					mEngine = new SynthEngine(this);
 				}
 				break;
 			case SettingChangeHelper.MIDI_OUTPUT_MODE_NETWORK:

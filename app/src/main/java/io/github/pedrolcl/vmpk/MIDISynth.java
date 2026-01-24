@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-/* Copyright © 2013–2025 Pedro López-Cabanillas. */
+/* Copyright © 2013–2026 Pedro López-Cabanillas. */
 
 /*
  * OpenSL ES audio output for Sonivox EAS synthesizer in real time

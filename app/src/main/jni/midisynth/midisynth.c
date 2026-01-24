@@ -1,6 +1,6 @@
 /*
  * OpenSL ES audio output for Sonivox EAS synthesizer in real time
- * Copyright (C) 2013 Pedro López-Cabanillas <plcl@users.sf.net>
+ * Copyright (C) 2013-2026 Pedro López-Cabanillas <plcl@users.sf.net>
  *
  * Based on opensl_stream, by Peter Brinkmann
  *

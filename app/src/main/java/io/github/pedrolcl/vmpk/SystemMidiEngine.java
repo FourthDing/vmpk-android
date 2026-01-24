@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* Copyright © 2013–2025 Pedro López-Cabanillas. */
+/* Copyright © 2013–2026 Pedro López-Cabanillas. */
 /* Copyright © 2025 Alvin Wong */
 
 package io.github.pedrolcl.vmpk;

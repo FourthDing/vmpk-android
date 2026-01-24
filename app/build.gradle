@@ -10,6 +10,9 @@ android {
         compileSdk 33
         applicationId = 'io.github.pedrolcl.vmpk'
         archivesBaseName = "$applicationId-v$versionName"
+        ndk {
+            abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+        }
     }
 
     externalNativeBuild {

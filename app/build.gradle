@@ -4,8 +4,8 @@ android {
     namespace 'io.github.pedrolcl.vmpk'
 
     defaultConfig {
-        versionCode 151
-        versionName '1.5.1'
+        versionCode 152
+        versionName '1.5.2'
         minSdkVersion 29
         compileSdk 33
         applicationId = 'io.github.pedrolcl.vmpk'

@@ -170,6 +170,11 @@ JNIEXPORT void JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_initReverb(JNIEnv 
   EAS_RESULT eas_res;
   EAS_BOOL sw = EAS_TRUE;
   struct LibraryContext *lc = (struct LibraryContext *) (*env)->GetDirectBufferAddress(env, ctx);
+
+  eas_res = EAS_SetParameter(lc->easData, EAS_MODULE_REVERB, EAS_PARAM_REVERB_OVERRIDE_CC, sw);
+  if (eas_res != EAS_SUCCESS) {
+      LOGW("EAS_SetParameter error: %ld", eas_res);
+  }
   if ( reverb_type >= EAS_PARAM_REVERB_LARGE_HALL && reverb_type <= EAS_PARAM_REVERB_ROOM ) {
 	  sw = EAS_FALSE;
 	  eas_res = EAS_SetParameter(lc->easData, EAS_MODULE_REVERB, EAS_PARAM_REVERB_PRESET, (EAS_I32) reverb_type);
@@ -188,6 +193,11 @@ JNIEXPORT void JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_initChorus(JNIEnv 
   EAS_RESULT eas_res;
   EAS_BOOL sw = EAS_TRUE;
   struct LibraryContext *lc = (struct LibraryContext *) (*env)->GetDirectBufferAddress(env, ctx);
+
+  eas_res = EAS_SetParameter(lc->easData, EAS_MODULE_CHORUS, EAS_PARAM_CHORUS_OVERRIDE_CC, sw);
+  if (eas_res != EAS_SUCCESS) {
+      LOGW("EAS_SetParameter error: %ld", eas_res);
+  }
   if (chorus_type >= EAS_PARAM_CHORUS_PRESET1 && chorus_type <= EAS_PARAM_CHORUS_PRESET4 ) {
 	  sw = EAS_FALSE;
 	  eas_res = EAS_SetParameter(lc->easData, EAS_MODULE_CHORUS, EAS_PARAM_CHORUS_PRESET, (EAS_I32) chorus_type);
@@ -221,3 +231,17 @@ JNIEXPORT void JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_setChorusLevel(JNI
   }
 }
 
+JNIEXPORT void JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_initLibrary(JNIEnv *env, jclass clazz, jobject ctx, jint sound_lib)
+{
+    struct LibraryContext *lc = (struct LibraryContext *) (*env)->GetDirectBufferAddress(env, ctx);
+
+    const char *sndlib_name = EAS_GetDefaultSoundLibrary(sound_lib);
+    if (sndlib_name != NULL)
+    {
+        LOGI("EAS_GetDefaultSoundLibrary: %s", sndlib_name);
+        EAS_RESULT eas_res = EAS_SetSoundLibrary(lc->easData, NULL, EAS_GetSoundLibrary(lc->easData, sndlib_name));
+        if (eas_res != EAS_SUCCESS) {
+            LOGW("EAS_SetSoundLibrary error: %ld", eas_res);
+        }
+    }
+}

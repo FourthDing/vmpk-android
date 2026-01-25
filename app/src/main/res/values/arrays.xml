@@ -364,5 +364,14 @@
 		<item>2</item>
 	</string-array>
 
+	<string-array name="sound_engine_names">
+		<item>Wave Table Synth</item>
+		<item>FM Synth</item>
+	</string-array>
+
+	<string-array name="sound_engine_values">
+		<item>1</item>
+		<item>2</item>
+	</string-array>
 
 </resources>

@@ -12,6 +12,7 @@ public class SynthEngine implements MidiEngine {
 	private MIDISynth synth = null;
 	private int mReverb = MIDISynth.REVERB_HALL;
 	private int mChorus = -1;
+	private int mSoundLib = 1;
 
 	public SynthEngine(Activity activity) {
 		readSettings(activity);
@@ -22,8 +23,11 @@ public class SynthEngine implements MidiEngine {
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 			String defaultReverb = activity.getResources().getString(R.string.default_reverb);
 			String defaultChorus = activity.getResources().getString(R.string.default_chorus);
+			String defaultSoundLib = "1";
 			mReverb = Integer.parseInt(sharedPrefs.getString("reverb", defaultReverb));
 			mChorus = Integer.parseInt(sharedPrefs.getString("chorus", defaultChorus));
+			mSoundLib = Integer.parseInt(sharedPrefs.getString("sound_engine", defaultSoundLib));
+			Log.d("SynthEngine", "readSettings.soundLib:" + mSoundLib);
 		} catch (Exception ex) {
 			Log.d("SynthEngine", "Initialization", ex);
 		}
@@ -37,7 +41,8 @@ public class SynthEngine implements MidiEngine {
 				synth = new MIDISynth();
 			}
 			synth.start();
-			// aplicar settings: tipo de reverb y tipo de chorus
+			synth.initLibrary(mSoundLib);
+			// apply settings: reverb type and chorus type
 			synth.initReverb(mReverb);
 			synth.initChorus(mChorus);
 			if (mReverb > -1) {

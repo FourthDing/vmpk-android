@@ -120,6 +120,13 @@ public class MIDISynth {
     initChorus(context, chorus_type);
   }
 
+  public void initLibrary(int sound_lib) {
+    if (context == null) {
+      throw new IllegalStateException("Stream closed.");
+    }
+    initLibrary(context, sound_lib);
+  }
+
   public void reverbWet(int amount) {
     if (context == null) {
       throw new IllegalStateException("Stream closed.");
@@ -153,5 +160,7 @@ public class MIDISynth {
   private static native void setReverbWet(ByteBuffer ctx, int amount);
 
   private static native void setChorusLevel(ByteBuffer ctx, int level);
+
+  private static native void initLibrary(ByteBuffer ctx, int sound_lib);
 
 }

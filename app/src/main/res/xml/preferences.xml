@@ -89,7 +89,15 @@
         android:entryValues="@array/chorus_values"
         android:defaultValue="@string/default_chorus"
         />
-        
+
+      <ListPreference
+        android:title="Sound Engine"
+        android:key="sound_engine"
+        android:entries="@array/sound_engine_names"
+        android:entryValues="@array/sound_engine_values"
+        android:defaultValue="1"
+        />
+
     </PreferenceCategory>
 
     <PreferenceCategory 

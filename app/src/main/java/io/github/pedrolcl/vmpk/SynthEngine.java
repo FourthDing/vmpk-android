@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-/* Copyright © 2013–2025 Pedro López-Cabanillas. */
+/* Copyright © 2013–2026 Pedro López-Cabanillas. */
 
 package io.github.pedrolcl.vmpk;
 
@@ -12,6 +12,7 @@ public class SynthEngine implements MidiEngine {
 	private MIDISynth synth = null;
 	private int mReverb = MIDISynth.REVERB_HALL;
 	private int mChorus = -1;
+	private int mSoundLib = MIDISynth.SNDLIB_WT;
 
 	public SynthEngine(Activity activity) {
 		readSettings(activity);
@@ -22,10 +23,12 @@ public class SynthEngine implements MidiEngine {
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 			String defaultReverb = activity.getResources().getString(R.string.default_reverb);
 			String defaultChorus = activity.getResources().getString(R.string.default_chorus);
+			String defaultSoundLib = "1";
 			mReverb = Integer.parseInt(sharedPrefs.getString("reverb", defaultReverb));
 			mChorus = Integer.parseInt(sharedPrefs.getString("chorus", defaultChorus));
+			mSoundLib = Integer.parseInt(sharedPrefs.getString("sound_engine", defaultSoundLib));
 		} catch (Exception ex) {
-			Log.d("SynthEngine", "Initialization", ex);
+			Log.e("SynthEngine", "Initialization", ex);
 		}
 	}
 
@@ -33,11 +36,11 @@ public class SynthEngine implements MidiEngine {
 		readSettings(activity);
 		try {
 			if (synth == null) {
-				Log.d("SynthEngine", "start");
-				synth = new MIDISynth();
+				synth = new MIDISynth(mSoundLib);
 			}
 			synth.start();
-			// aplicar settings: tipo de reverb y tipo de chorus
+			// synth.initLibrary(mSoundLib); Do not use!
+			// apply settings: reverb type and chorus type
 			synth.initReverb(mReverb);
 			synth.initChorus(mChorus);
 			if (mReverb > -1) {
@@ -53,7 +56,6 @@ public class SynthEngine implements MidiEngine {
 
 	public void stop() {
 		if (synth != null) {
-			Log.d("SynthEngine", "stop");
 			synth.stop();
 			synth.close();
 			synth = null;

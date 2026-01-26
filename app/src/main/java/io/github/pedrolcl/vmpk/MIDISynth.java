@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-/* Copyright © 2013–2025 Pedro López-Cabanillas. */
+/* Copyright © 2013–2026 Pedro López-Cabanillas. */
 
 /*
  * OpenSL ES audio output for Sonivox EAS synthesizer in real time
@@ -30,6 +30,9 @@ public class MIDISynth {
   public static final int REVERB_CHAMBER = 2;
   public static final int REVERB_ROOM = 3;
 
+  public static final int SNDLIB_WT = 1;
+  public static final int SNDLIB_FM = 2;
+
   static {
     System.loadLibrary("midisynth");
   }
@@ -41,8 +44,8 @@ public class MIDISynth {
    * 
    * @throws IOException if not supported.
    */
-  public MIDISynth() throws IOException {
-    context = open();
+  public MIDISynth(int sound_lib) throws IOException {
+    context = open(sound_lib);
     if (context == null) {
       throw new IOException("Unsupported");
     }
@@ -120,6 +123,15 @@ public class MIDISynth {
     initChorus(context, chorus_type);
   }
 
+  /* Do not use.
+  public void initLibrary(int sound_lib) {
+    if (context == null) {
+      throw new IllegalStateException("Stream closed.");
+    }
+    Log.d("MIDISynth", "sound_lib=" + sound_lib);
+    initLibrary(context, sound_lib);
+  }*/
+
   public void reverbWet(int amount) {
     if (context == null) {
       throw new IllegalStateException("Stream closed.");
@@ -134,7 +146,7 @@ public class MIDISynth {
     setChorusLevel(context, level);
   }
 
-  private static native ByteBuffer open();
+  private static native ByteBuffer open(int snd_lib);
 
   private static native void close(ByteBuffer ctx);
 
@@ -153,5 +165,7 @@ public class MIDISynth {
   private static native void setReverbWet(ByteBuffer ctx, int amount);
 
   private static native void setChorusLevel(ByteBuffer ctx, int level);
+
+  /* private static native void initLibrary(ByteBuffer ctx, int sound_lib); */
 
 }

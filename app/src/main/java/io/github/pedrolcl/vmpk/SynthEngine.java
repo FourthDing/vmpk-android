@@ -27,9 +27,8 @@ public class SynthEngine implements MidiEngine {
 			mReverb = Integer.parseInt(sharedPrefs.getString("reverb", defaultReverb));
 			mChorus = Integer.parseInt(sharedPrefs.getString("chorus", defaultChorus));
 			mSoundLib = Integer.parseInt(sharedPrefs.getString("sound_engine", defaultSoundLib));
-			Log.d("SynthEngine", "readSettings.soundLib: " + mSoundLib);
 		} catch (Exception ex) {
-			Log.d("SynthEngine", "Initialization", ex);
+			Log.e("SynthEngine", "Initialization", ex);
 		}
 	}
 
@@ -37,11 +36,10 @@ public class SynthEngine implements MidiEngine {
 		readSettings(activity);
 		try {
 			if (synth == null) {
-				Log.d("SynthEngine", "start");
 				synth = new MIDISynth(mSoundLib);
 			}
 			synth.start();
-			// synth.initLibrary(mSoundLib); BUG: crashes !!!
+			// synth.initLibrary(mSoundLib); Do not use!
 			// apply settings: reverb type and chorus type
 			synth.initReverb(mReverb);
 			synth.initChorus(mChorus);
@@ -58,7 +56,6 @@ public class SynthEngine implements MidiEngine {
 
 	public void stop() {
 		if (synth != null) {
-			Log.d("SynthEngine", "stop");
 			synth.stop();
 			synth.close();
 			synth = null;

@@ -4,7 +4,7 @@
 package io.github.pedrolcl.vmpk;
 
 public class Log {
-    static final boolean LOG = true;
+    static final boolean LOG = false;
 
     public static void e(String tag, String msg) {
         if (LOG) android.util.Log.e(tag, msg);

@@ -78,10 +78,10 @@ JNIEXPORT jobject JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_open(JNIEnv *en
   const char *sndlib_name = EAS_GetDefaultSoundLibrary(sound_lib);
   if ( sndlib_name != NULL )
   {
-      LOGI("EAS_GetDefaultSoundLibrary: %d => %s", sound_lib, sndlib_name);
+      //LOGI("EAS_GetDefaultSoundLibrary: %d => %s", sound_lib, sndlib_name);
       eas_res = EAS_SetSoundLibrary(dataHandle, NULL, EAS_GetSoundLibrary(dataHandle, sndlib_name));
       if (eas_res != EAS_SUCCESS) {
-          LOGW("EAS_SetSoundLibrary error: %ld", eas_res);
+          //LOGW("EAS_SetSoundLibrary error: %ld", eas_res);
       }
   }
 
@@ -183,7 +183,7 @@ JNIEXPORT void JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_initReverb(JNIEnv 
 
   eas_res = EAS_SetParameter(lc->easData, EAS_MODULE_REVERB, EAS_PARAM_REVERB_OVERRIDE_CC, sw);
   if (eas_res != EAS_SUCCESS) {
-      LOGW("EAS_SetParameter error: %ld", eas_res);
+      //LOGW("EAS_SetParameter error: %ld", eas_res);
   }
   if ( reverb_type >= EAS_PARAM_REVERB_LARGE_HALL && reverb_type <= EAS_PARAM_REVERB_ROOM ) {
 	  sw = EAS_FALSE;
@@ -206,7 +206,7 @@ JNIEXPORT void JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_initChorus(JNIEnv 
 
   eas_res = EAS_SetParameter(lc->easData, EAS_MODULE_CHORUS, EAS_PARAM_CHORUS_OVERRIDE_CC, sw);
   if (eas_res != EAS_SUCCESS) {
-      LOGW("EAS_SetParameter error: %ld", eas_res);
+      //LOGW("EAS_SetParameter error: %ld", eas_res);
   }
   if (chorus_type >= EAS_PARAM_CHORUS_PRESET1 && chorus_type <= EAS_PARAM_CHORUS_PRESET4 ) {
 	  sw = EAS_FALSE;
@@ -241,6 +241,7 @@ JNIEXPORT void JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_setChorusLevel(JNI
   }
 }
 
+/* Do not use this function. See: https://github.com/EmbeddedSynth/sonivox/issues/8
 JNIEXPORT void JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_initLibrary(JNIEnv *env, jclass clazz, jobject ctx, jint sound_lib)
 {
     struct LibraryContext *lc = (struct LibraryContext *) (*env)->GetDirectBufferAddress(env, ctx);
@@ -254,4 +255,4 @@ JNIEXPORT void JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_initLibrary(JNIEnv
             LOGW("EAS_SetSoundLibrary error: %ld", eas_res);
         }
     }
-}
+} */

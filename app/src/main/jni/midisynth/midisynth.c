@@ -56,11 +56,11 @@ static void process(void *context, int sample_rate, int buffer_frames,
     }
 }
 
-JNIEXPORT jobject JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_open(JNIEnv *env, jclass clazz)
+JNIEXPORT jobject JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_open(JNIEnv *env, jclass clazz, jint sound_lib)
 {
   EAS_RESULT eas_res;
   EAS_DATA_HANDLE dataHandle;
-  EAS_HANDLE handle;
+  EAS_HANDLE handle = NULL;
   int bufferFrames = 0;
 
   const S_EAS_LIB_CONFIG *easConfig = EAS_Config();
@@ -73,6 +73,16 @@ JNIEXPORT jobject JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_open(JNIEnv *en
   if (eas_res != EAS_SUCCESS) {
 	//LOGW("EAS_Init error: %ld", eas_res);
 	return NULL;
+  }
+
+  const char *sndlib_name = EAS_GetDefaultSoundLibrary(sound_lib);
+  if ( sndlib_name != NULL )
+  {
+      LOGI("EAS_GetDefaultSoundLibrary: %d => %s", sound_lib, sndlib_name);
+      eas_res = EAS_SetSoundLibrary(dataHandle, NULL, EAS_GetSoundLibrary(dataHandle, sndlib_name));
+      if (eas_res != EAS_SUCCESS) {
+          LOGW("EAS_SetSoundLibrary error: %ld", eas_res);
+      }
   }
 
   eas_res = EAS_OpenMIDIStream(dataHandle, &handle, NULL);
@@ -236,9 +246,9 @@ JNIEXPORT void JNICALL Java_io_github_pedrolcl_vmpk_MIDISynth_initLibrary(JNIEnv
     struct LibraryContext *lc = (struct LibraryContext *) (*env)->GetDirectBufferAddress(env, ctx);
 
     const char *sndlib_name = EAS_GetDefaultSoundLibrary(sound_lib);
-    if (sndlib_name != NULL)
+    if ( sndlib_name != NULL && lc != NULL && lc->easData != NULL )
     {
-        LOGI("EAS_GetDefaultSoundLibrary: %s", sndlib_name);
+        LOGI("EAS_GetDefaultSoundLibrary: %d => %s", sound_lib, sndlib_name);
         EAS_RESULT eas_res = EAS_SetSoundLibrary(lc->easData, NULL, EAS_GetSoundLibrary(lc->easData, sndlib_name));
         if (eas_res != EAS_SUCCESS) {
             LOGW("EAS_SetSoundLibrary error: %ld", eas_res);

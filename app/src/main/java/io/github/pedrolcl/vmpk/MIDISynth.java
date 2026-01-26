@@ -30,6 +30,9 @@ public class MIDISynth {
   public static final int REVERB_CHAMBER = 2;
   public static final int REVERB_ROOM = 3;
 
+  public static final int SNDLIB_WT = 1;
+  public static final int SNDLIB_FM = 2;
+
   static {
     System.loadLibrary("midisynth");
   }
@@ -41,8 +44,8 @@ public class MIDISynth {
    * 
    * @throws IOException if not supported.
    */
-  public MIDISynth() throws IOException {
-    context = open();
+  public MIDISynth(int sound_lib) throws IOException {
+    context = open(sound_lib);
     if (context == null) {
       throw new IOException("Unsupported");
     }
@@ -124,6 +127,7 @@ public class MIDISynth {
     if (context == null) {
       throw new IllegalStateException("Stream closed.");
     }
+    Log.d("MIDISynth", "sound_lib=" + sound_lib);
     initLibrary(context, sound_lib);
   }
 
@@ -141,7 +145,7 @@ public class MIDISynth {
     setChorusLevel(context, level);
   }
 
-  private static native ByteBuffer open();
+  private static native ByteBuffer open(int snd_lib);
 
   private static native void close(ByteBuffer ctx);
 
